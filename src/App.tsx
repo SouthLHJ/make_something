@@ -6,21 +6,18 @@ import './App.css'
 
 import Home from "@container/Home";
 // import CheckImageReg from "@container/checkImgReg";
-import AlertCustom from "./component/AlertCustom";
 import Image from "@container/img";
+import IconList from './container/IconList';
 
 function App() {
   const [count, setCount] = useState(0);
 
-  console.log(AlertCustom)
-
   return (
     <div style={{display :"flex",flex : 1}}>
-      {/* <Profiler id="Navigation" onRender={callback}> */}
+      <Profiler id="Navigation" onRender={()=><div>loading...</div>}>
         <Image/>
-
-        
-      {/* </Profiler> */}
+        <IconList/>
+      </Profiler>
     </div>
     
   )
