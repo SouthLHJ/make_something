@@ -2,11 +2,12 @@ import { Profiler, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import Zustand from '@container/Zustand';
 
 
-import Home from "@container/Home";
+// import Home from "@container/Home";
 // import CheckImageReg from "@container/checkImgReg";
-import Image from "@container/img";
+// import Image from "@container/img";
 import IconList from './container/IconList';
 
 function App() {
@@ -15,16 +16,18 @@ function App() {
   return (
     <div style={{display :"flex",flex : 1}}>
       <Profiler id="Navigation" onRender={()=><div>loading...</div>}>
-        <Image/>
+        <Zustand/>
         <IconList/>
       </Profiler>
     </div>
     
-  )
-}
-
-export default App
-
+    )
+  }
+  
+  export default App
+  
+  {/* <Image/>
+<IconList/> */}
 
 /*
 

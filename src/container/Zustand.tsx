@@ -11,6 +11,10 @@ const Zustand = ()=>{
     return(
         <div>
             <h1>Zustand</h1>
+
+            <p>{counts}</p>
+
+            <button onClick={()=>increaseCount()}>버튼</button>
         </div>
     )
 }

@@ -21,7 +21,7 @@ const IconList = ()=>{
     const icons = Object.keys(list).map((listName) =>{
         const Compo = list[listName];
         return (
-            <div>
+            <div >
                 <Compo size={30}/>
                 <span>{listName}</span>
             </div>
@@ -29,7 +29,7 @@ const IconList = ()=>{
     })
 
     return (
-        <div>
+        <div style={{height : "400px", overflowY : "scroll"}}>
             {icons}
         </div>
     )
