@@ -8,7 +8,8 @@ import Zustand from '@container/Zustand';
 // import Home from "@container/Home";
 // import CheckImageReg from "@container/checkImgReg";
 // import Image from "@container/img";
-import IconList from './container/IconList';
+// import IconList from './container/IconList';
+import Filter from '@container/Filter';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -16,8 +17,7 @@ function App() {
   return (
     <div style={{display :"flex",flex : 1}}>
       <Profiler id="Navigation" onRender={()=><div>loading...</div>}>
-        <Zustand/>
-        <IconList/>
+        <Filter/>
       </Profiler>
     </div>
     

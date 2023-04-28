@@ -1,5 +1,6 @@
 // import {Err} from "react"
 
+import ErrorBoundary from "@src/component/ErrorBoundary";
 import MakeError from "@src/component/ErrorBoundary/MakeError";
 
 
