@@ -12,7 +12,6 @@ const FilterItem = ({data, id, handleList}:{data:any, id: String, handleList : (
         setInput(data.value);
     },[data])
 
-
     const handleFilter = ()=>{
         
     }
@@ -35,7 +34,9 @@ const FilterItem = ({data, id, handleList}:{data:any, id: String, handleList : (
                     <option>수료번호</option>
                     <option>지역</option>
                 </select>
+                
 
+                
                 <input value={input}  type="text"
                     onChange={(e)=>{setInput(e.target.value);handleList(id,select,e.target.value);}}
                 />

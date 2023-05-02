@@ -2,10 +2,11 @@ import {useRef,memo, useState, useEffect, useCallback} from 'react'
 
 import FilterItem from "@src/component/Filter/items/item";
 
+const key = ['교육기간','과정명','아이디','이름','이메일','소속명','수료번호','지역'];
 
-const FilterItems = ()=>{
+const FilterItems = ({handleSearch}:{handleSearch : (filter: Array<Array<Object>>) => void})=>{
 
-    const [list, setList] = useState<Array<Array<Object>>>([[{filter : "교육기간", value : "값1", type : "text"}]]);
+    const [list, setList] = useState<Array<Array<Object>>>([[{filter : "교육기간", value : 1, type : "text"}]]);
     /*
         [ $and :
             [$or : {},{},{}],
@@ -16,10 +17,9 @@ const FilterItems = ()=>{
     */
     useEffect(()=>{
         return ()=>{
-            setList([[{filter : "교육기간", value : "값1", link : 0, row : 0, column : 0}]])
+            setList([[{filter : "교육기간", value : 1, type : "text"}]])
         }
     },[])
-
 
     const onChangeList = useCallback((id:String,filter:any,value:any)=>{
         let idIdx = id.split("_").map(item=>Number(item));
@@ -51,9 +51,11 @@ const FilterItems = ()=>{
     },[list])
     
     const handleAddRow = (id:Number)=>{
-        console.log("handleAddRow")
+        console.log("handleAddRow");
+        // dummy
+        const dum = (Math.random()*10).toFixed(0);
         setList(current=>{
-            let item = [...current,[{filter : "교육기간", value : "값1", link : 0, row : 0, column : 0}]];
+            let item = [...current,[{filter : key[Number(dum)], value : dum , type : "text"}]];
             
             return item;
         })
@@ -62,57 +64,59 @@ const FilterItems = ()=>{
     const handleAddColumn = (id:String)=>{
         console.log("handleAddColumn")
         let idIdx = id.split("_")
-        console.log(idIdx,"==== idIdx")
+        // dummy
+        const dum = (Math.random()*10).toFixed(0);
         setList(current=>{
             let item = current.map((ritems,ridx)=>{
-                console.log(ritems, "======= ritems")
                 if(ridx === Number(idIdx[0])){
-                    return [...ritems,{filter : "교육기간", value : "값1", link : 0, row : 0, column : 0}]
+                    return [...ritems,{filter : key[Number(dum)], value : dum , type : "text"}]
                 }else{
                     return ritems
                 }
             });
-            console.log(item,"==== item")
             return item;
         })
     }
 
   
     return(
-        <div style={{display :'flex', flexDirection : "row"}}>
-            {
-                list.map((rfilter, ridx )=>{
+        <>
+            <div style={{display :'flex', flexDirection : "row"}}>
+                {
+                    list.map((rfilter, ridx )=>{
 
-                    return (
-                        <>
-                            <div style={{display :'flex', flexDirection :"column"}}>
+                        return (
+                            <>
+                                <div style={{display :'flex', flexDirection :"column"}}>
+                                    {
+                                    rfilter.map((filter,cidx)=>{
+                                        return (
+                                        <>
+                                            <FilterItem data={filter} id={`${ridx}_${cidx}`} handleList={onChangeList}/>
+                                            {
+                                                (cidx === rfilter.length-1 || rfilter.length===1) ?
+                                                <button onClick={()=>handleAddColumn(`${ridx}_${cidx}`)}>or</button>
+                                                :
+                                                <div style={{width : `125px`, height : `${30}px`, borderRight : "1px solid #ddd"}}></div>
+                                            }
+                                        </>
+                                        )
+                                    })
+                                    }
+                                </div>
                                 {
-                                rfilter.map((filter,cidx)=>{
-                                    return (
-                                    <>
-                                        <FilterItem data={filter} id={`${ridx}_${cidx}`} handleList={onChangeList}/>
-                                        {
-                                            (cidx === rfilter.length-1 || rfilter.length===1) ?
-                                            <button onClick={()=>handleAddColumn(`${ridx}_${cidx}`)}>or</button>
-                                            :
-                                            <div style={{width : `125px`, height : `${30}px`, borderRight : "1px solid #ddd"}}></div>
-                                        }
-                                    </>
-                                    )
-                                })
+                                    (ridx === list.length-1 || list.length===1 )?
+                                    <button style={{height : "40px"}} onClick={()=>handleAddRow(ridx)}>and</button>
+                                    :
+                                    <div style={{width : `${30}px`, height : `20px`, borderBottom : "1px solid #ddd"}}></div>
                                 }
-                            </div>
-                            {
-                                (ridx === list.length-1 || list.length===1 )?
-                                <button style={{height : "40px"}} onClick={()=>handleAddRow(ridx)}>and</button>
-                                :
-                                <div style={{width : `${30}px`, height : `20px`, borderBottom : "1px solid #ddd"}}></div>
-                            }
-                        </>
-                    )
-                })
-            }
-        </div>
+                            </>
+                        )
+                    })
+                }
+            </div>
+            <button onClick={()=>handleSearch(list)}>검색</button>
+        </>
     )
 }
 
