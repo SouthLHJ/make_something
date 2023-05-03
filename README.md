@@ -9,5 +9,5 @@
     - How do use Zustand. Simple Example.
 
 3. MultiFilter
-    - 
+    - and/or Filter.
 
