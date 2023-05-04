@@ -1,6 +1,6 @@
 
-const TutorialHome = ()=>{
 
+const TutorialHome = ()=>{
 
 
     return(

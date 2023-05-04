@@ -1,25 +1,50 @@
 import { Profiler, useState } from 'react'
+import { Route } from "react-router-dom";
+
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import Zustand from '@container/Zustand';
 
-
-// import Home from "@container/Home";
+import LayOut from './component/Layout';
+import Home from "@container/Home";
 // import CheckImageReg from "@container/checkImgReg";
 // import Image from "@container/img";
-// import IconList from './container/IconList';
+import IconList from './container/IconList';
+import Zustand from '@container/Zustand';
 import Filter from '@container/Filter';
+
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <div style={{display :"flex",flex : 1}}>
-      <Profiler id="Navigation" onRender={()=><div>loading...</div>}>
-        <Filter/>
-      </Profiler>
-    </div>
+        <Profiler id="Navigation" onRender={()=><div>loading...</div>}>
+
+        
+        <LayOut>
+          <Route path={'/'} element={<Home/>} />
+          <Route path={'/Filter'}
+              // loader={({ params }) => {
+              //     console.log("loading...");
+              // }}
+              element={<Filter/>}
+          />
+          <Route path={'/Zustand'}
+              // loader={({ params }) => {
+              //     console.log("loading...");
+              // }}
+              element={<Zustand/>}
+          />
+          <Route path={'/IconList'}
+              // loader={({ params }) => {
+              //     console.log("loading...");
+              // }}
+              element={<IconList/>}
+          />
+        </LayOut>
+        </Profiler>
+      </div>
     
     )
   }
