@@ -13,6 +13,8 @@ import IconList from './container/IconList';
 import Zustand from '@container/Zustand';
 import Filter from '@container/Filter';
 
+import Table from '@container/Table'
+
 
 function App() {
   const [count, setCount] = useState(0);
@@ -20,10 +22,7 @@ function App() {
   return (
     <div style={{display :"flex",flex : 1}}>
         <Profiler id="Navigation" onRender={()=><div>loading...</div>}>
-
-        
-        <LayOut>
-          <Route path={'/'} element={<Home/>} />
+          {/* <Route path={'/'} element={<Home/>} />
           <Route path={'/Filter'}
               // loader={({ params }) => {
               //     console.log("loading...");
@@ -41,8 +40,22 @@ function App() {
               //     console.log("loading...");
               // }}
               element={<IconList/>}
+          /> */}
+
+          <Table 
+            thData={[{value: '1', width : 250},{value: '2', width : 250},{value: '3', width : 250}]}
+            tdData={[
+              [{value: '1', width : 250},{value: '1', width : 250},{value: '1', width : 250}],
+              [{value: '2', width : 250}],
+              [{value: '3', width : 250}]
+            ]}
+
+            Element={{
+              modify : (() => <div>Render</div>),
+            }}
           />
-        </LayOut>
+
+
         </Profiler>
       </div>
     

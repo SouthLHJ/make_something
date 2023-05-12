@@ -1,0 +1,121 @@
+// DIV
+.common_table{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    height : 500px;
+    overflow-x: auto;
+    width: 100%;
+
+    .th_container{
+        min-width : 100%;
+        width : fit-content;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .common_th{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        padding : 10px;
+        background-color: #fff;
+        
+        border-top-right-radius: 10px;
+        border-top-left-radius: 10px;
+
+        overflow: hidden;
+        width: fit-content;
+        min-height: 35px;
+        .common_th_class{
+            text-align: center;
+            font-size:  14px;
+            color : #516175;
+            // border-right: 1px solid #ddd;
+        }
+    }   
+  
+    .td_container{
+        overflow: auto;
+        height: 100%;
+
+        
+    }
+  
+    .common_td{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+  
+        padding : 10px;
+        overflow: hidden;
+        width: 100%;
+        min-height: 35px;
+        white-space: nowrap;
+        overflow: hidden;
+
+        &:nth-child(odd){
+            background-color: #F6F7FB;
+        }
+
+        &:hover{
+            background-color: #E9EDF4;
+            .common_td_class{
+                color : #425896;
+                font-weight: bold;
+            
+            }
+
+        }
+
+        .common_td_class{
+            text-align: center;
+            font-size:  14px;
+            color : #516175;
+            overflow: hidden;
+        }
+
+
+    }
+
+    .no_data{
+        background-color: #fff;
+        width: 100%;
+        height: 100%;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        span{
+            color : #696969;
+        }
+    }
+
+
+
+    
+    &::-webkit-scrollbar, ::-webkit-scrollbar {
+        height: 6px;
+        width:  6px;
+        border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb {
+        background-color: #c8cbdb;
+        border-radius: 10px;
+    }
+    &::-webkit-scrollbar-track, ::-webkit-scrollbar-track {
+        background-color: #f2f3f7;
+        border-radius: 10px;
+    }
+
+    .cellTextLeftFlex{
+        display: flex;
+        justify-content: flex-start;
+    }
+    
+    &.height300{
+        height: 300px;
+    }
+}
