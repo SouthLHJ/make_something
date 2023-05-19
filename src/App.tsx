@@ -42,7 +42,7 @@ function App() {
               element={<IconList/>}
           /> */}
 
-          <Table 
+          {/* <Table 
             thData={[{value: '1', width : 250},{value: '2', width : 250},{value: '3', width : 250}]}
             tdData={[
               [{value: '1', width : 250},{value: '1', width : 250},{value: '1', width : 250}],
@@ -53,9 +53,9 @@ function App() {
             Element={{
               modify : (() => <div>Render</div>),
             }}
-          />
+          /> */}
 
-
+            <input onBlur={(e)=>{console.log(e); e.target.value = '바꿀꺼임'}}/>
         </Profiler>
       </div>
     
