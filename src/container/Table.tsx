@@ -1,46 +1,29 @@
-/**
- * @typedef Title
- * @property {string}        headerName                 titlename
- * @property {string}        field                      field
- * @property {string|number} width                      넓이
- * @property {string}        class                      class name
- * @property {number}        flex                       style flex
- * @property {number}        minWidth                   style flex
- * @property {number}        maxWidth                   style flex
- * @property {string}        cellRenderer               Element
- * @property {boolean}       headerCheckboxSelection    title 체크박스 
- * @property {boolean}       checkboxSelection          tbody 체크박스
- * @property {string}        autoIndexing               자동 순차 인덱싱
- * @property {string}        cellEditor                 input type='text' 사용
- * 
-*/
-
-/**
- * @typedef FrameworkComponents
- * @property {string}       key                         cellRenderer에 들어간 string
- * @property {Element}      Element                     원하는 element 값
- * 
- */
-
-/**
- * @typedef Option
- * @property {Array<Title>}          columnDefs   
- * @property {FrameworkComponents}   frameworkComponents
- * @property {onSelectionChanged}    onSelectionChanged
- * 
- */
 
 import _ from 'lodash';
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useEffect } from 'react';
 import {useForm, Controller} from "react-hook-form";
 
+import {FrameworkComponents,Option,Props,Title} from '../component/Table/Type';
 import 'styles/components/Table.scss';
+import { Style } from 'util';
+
+/** ref.current
+ *  @typedef ref
+ *  @property {*}                   api
+ *  @property {Element}             element             테이블
+ * 
+ */
+
+/** ref.current.api
+ *  @typedef API
+ *  @property {Function}            handleStartLoading  로딩 화면 시작
+ *  @property {Function}            handleStopLoading   로딩 화면 종료
+ *  @property {Function}            onDownloadExcel     테이블 엑셀 다운로드
+ */
 
 
-
-
-function NotStringData (t){
+function NotStringData (t : Object){
     if(_.get(t,'headerCheckboxSelection') || _.get(t,'checkboxSelection')){
         return 'checkbox'
     }
@@ -58,15 +41,8 @@ function NotStringData (t){
     }
 }
 
-/**  div table sopi last_230519
- *   Div로 만들어진 table
- *   @param {Array<Title>} option        title 값
- *   @param {Array<any>} data            td 값 (row 개념으로 작성)
- *   @param {string} th_box_class        th class                                                       
- *   @param {string} td_box_class        td class
- *   @param {string} tableclass          table class
- */
-const DivTable = ({option={},data, th_box_class='', td_box_class='', tableclass='' })=>{
+
+const DivTable = ({option,data, th_box_class='', td_box_class='', tableclass=''  }:Props)=>{
     const [title,setTitle] = useState([]);
     const titleRef = useRef([]);
     
@@ -75,6 +51,7 @@ const DivTable = ({option={},data, th_box_class='', td_box_class='', tableclass=
 
 
     const [checked, setChecked] = useState([]);
+    const [load, setLoad] = useState(false);
 
     const { register, setValue } = useForm({});
 
@@ -91,7 +68,7 @@ const DivTable = ({option={},data, th_box_class='', td_box_class='', tableclass=
             setStyle(c=>{
                 let newC = [...c];
 
-                let styles={}
+                let styles : any={}
                 styles.width= width;
 
                 setTitle(title=>{
@@ -179,15 +156,16 @@ const DivTable = ({option={},data, th_box_class='', td_box_class='', tableclass=
         })
     }
 
-    // api 
-    const api = useMemo(()=>{
-        return {
-            handleLoading : handleLoading
+    useImperativeHandle(ref, () => ({
+        element  : tableRef,
+        api : {
+            handleStartLoading: handleStartLoading,
+            handleStopLoading: handleStopLoading,
+            onDownloadExcel : onDownloadExcel,
         }
+    }));
 
-    },[])
-
-// =================== 테이블 기능 함수 
+// ================== 테이블 기능 함수 
 
     // 체크박스/selection 반응
     useEffect(()=>{
@@ -231,9 +209,55 @@ const DivTable = ({option={},data, th_box_class='', td_box_class='', tableclass=
     }
 
 
-    const handleLoading = ()=>{
+    /**
+     * 
+     * @param {string} title 엑셀 이름
+     */
+    const onDownloadExcel = (title ='TableDownload')=>{
+        try{
+            
+                let rowArr =[];
+                /*
+                    th 에서 값 뽑아내기
+                */
+                const thArr = thRef.current.getElementsByClassName('common_th_class');
+                let col = [];
+                for(let element of thArr){
+                    col.push(element.innerText)
+                }
+                rowArr.push(col);
+                /*
+                    td 에서 값 뽑아내기
+                */
+                const tdArr = tdRef.current.getElementsByClassName('common_td');
 
+                for(let element of tdArr){
+                    col = [];
+                    const tdelm = element.getElementsByClassName('common_td_class');
+                    for(let elm of tdelm){
+                        col.push(elm.innerText)
+                    }
+                    rowArr.push(col);
+                }
+                const excelFileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+                const excelFileExtension = '.xlsx';
+                const excelFileName = title;
+
+
+                const xlsx = XLSX.utils.aoa_to_sheet(rowArr);
+                const wb = { Sheets: { data: xlsx }, SheetNames: ['data'] };
+                const excelButter = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+                const excelFile = new Blob([excelButter], { type: excelFileType });
+                FileSaver.saveAs(excelFile, excelFileName + excelFileExtension);
+        }catch(e){
+            console.log("다운로드 기능 없음", e.message)
+        }
     }
+
+
+    const handleStartLoading = () => setLoad(true);
+    const handleStopLoading = () => setLoad(false);
+
 
 
     if(_.isEmpty(title)){
