@@ -3,6 +3,9 @@ import _ from 'lodash';
 import { memo, useCallback, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useEffect } from 'react';
 import {useForm, Controller} from "react-hook-form";
+import * as XLSX from 'xlsx';
+import * as FileSaver from "file-saver";
+import {FadeLoader} from 'react-spinners';
 
 import {FrameworkComponents,Option,Props,Title} from '../component/Table/Type';
 import 'styles/components/Table.scss';
@@ -43,6 +46,10 @@ function NotStringData (t : Object){
 
 
 const DivTable = ({option,data, th_box_class='', td_box_class='', tableclass=''  }:Props)=>{
+    const tableRef = useRef();
+    const thRef = useRef();
+    const tdRef = useRef();
+
     const [title,setTitle] = useState([]);
     const titleRef = useRef([]);
     
@@ -284,7 +291,7 @@ const DivTable = ({option,data, th_box_class='', td_box_class='', tableclass='' 
             <div className='th_container'>
             
             {/* th */}
-            <div className={`common_th ${th_box_class ?? ''}`}>
+            <div className={`common_th ${th_box_class ?? ''}`} ref={thRef}>
                 {
                     title.map((titleElm,titleElmIdx)=>{
 
@@ -330,7 +337,7 @@ const DivTable = ({option,data, th_box_class='', td_box_class='', tableclass='' 
 
             <div style={{height :'100%', borderBottomLeftRadius : "10px", borderBottomRightRadius : '10px'}}>
             {/* td */}
-            <div className='td_container'>
+            <div className='td_container' ref={tdRef}>
                 {
 
                     _.isEmpty(data)?
