@@ -286,139 +286,142 @@ const DivTable = ({option,data, th_box_class='', td_box_class='', tableclass='' 
     }
 
     return(
-        <div className={`common_table ${tableclass ?? ''}`} >
+        <div className={`common_table ${tableclass ?? ''}`} ref={tableRef} >
 
-            <div className='th_container'>
-            
-            {/* th */}
-            <div className={`common_th ${th_box_class ?? ''}`} ref={thRef}>
-                {
-                    title.map((titleElm,titleElmIdx)=>{
+            <div className='th_container' ref={thRef}>
 
-                        // 체크박스
-                        if(_.get(titleElm,'headerCheckboxSelection')){
-                            let style = headerStyle(titleElm)
-                            
-                            return (
-                                <div key={`th_${titleElmIdx}`} className={`common_th_class`} style={style} ref={el=>titleRef.current[titleElmIdx] = el} data-my-id={titleElmIdx}>
-                                    <input type='checkbox' id={`check`} name='headerChecked' ref={register()}
-                                        onChange={(e)=>{
-                                            if(e.target.checked){
-                                                setChecked(data);
-                                            }else{
-                                                setChecked([]);
-                                            }
-                                            data.forEach((item, index) => {
-                                                setValue(`table[${index}]`, e.target.checked)
-                                            })
-                                        }}
-                                    />
-                                    <label htmlFor={`check`}></label>
-                                </div>
-                            )
-                        }
-                        // default
-                        else{
-                            let style = headerStyle(titleElm)
-            
-                            return (
-                                <div key={`th_${titleElm.name}`} className={`common_th_class`} style={style} ref={el=>titleRef.current[titleElmIdx] = el} data-my-id={titleElmIdx}>
-                                    {titleElm.name}
-                                </div>
-                            )
-            
-                        }
-                    })
-                }
-                
-            </div>
-                
-            </div>
+                {/* th */}
+                <div className={`common_th ${th_box_class ?? ''}`}>
+                    {
+                        title.map((titleElm, titleElmIdx) => {
 
-            <div style={{height :'100%', borderBottomLeftRadius : "10px", borderBottomRightRadius : '10px'}}>
-            {/* td */}
-            <div className='td_container' ref={tdRef}>
-                {
+                            // 체크박스
+                            if (_.get(titleElm, 'headerCheckboxSelection')) {
+                                let style = headerStyle(titleElm)
 
-                    _.isEmpty(data)?
-                    (
-                        <div className='no_data'>
-                            <span>정보가 없습니다.</span>
-                        </div>
-                    )
-
-                    :
-                    tbody.map((tdata,tIdx)=>{
-                        const compo = title.map((t,tidx)=>{
-
-                            switch(NotStringData(t)){
-                                case 'cellRenderer':
-                                    return(
-                                        <div key={`td_${tIdx}_${tidx}`} className={`common_td_class ${_.get(t,`class`,"")}`}  style={_.get(style,tidx,{})}>
-                                            { _.get(t,`cellRenderer`)(_.get(data,tIdx),{row : tIdx, column: tidx})}
-                                        </div>
-                                    )
-                                case 'checkbox' :
-                                    return(
-                                        <div key={`td_${tIdx}_${tidx}`} className={`common_td_class ${_.get(t,`class`,"")}`}  style={_.get(style,tidx,{})}>
-                                            <input type='checkbox' id={`tableItem${tIdx}`} name={`table[${tIdx}]`} ref={register()}
-                                                onChange={
-                                                    (e)=>{
-                                                        setValue(`table[${tIdx}]`,e.target.checked)
-                                                        setChecked((current=>{
-                                                            console.log(current,`table[${tIdx}]`)
-                                                            let newArr = [];
-                                                            
-                                                            if(e.target.checked){
-                                                                newArr= [...current, data[tIdx]];
-                                                            }else{
-                                                                newArr = current.filter((elm)=>elm._id!==data[tIdx]._id)                                                    
-                                                            }
-                                                            return newArr;
-                                                        }))
-                                                    }
+                                return (
+                                    <div key={`th_${titleElmIdx}`} className={`common_th_class`} style={style} ref={el => titleRef.current[titleElmIdx] = el} data-my-id={titleElmIdx}>
+                                        <input type='checkbox' id={`check`} name='headerChecked' ref={register()}
+                                            onChange={(e) => {
+                                                if (e.target.checked) {
+                                                    setChecked(data);
+                                                } else {
+                                                    setChecked([]);
                                                 }
-                                            />
-                                            <label htmlFor={`tableItem${tIdx}`}></label>
-                                        </div>
-                                    )
-                                case 'autoIndexing' :
-                                    return (
-                                        <div key={`td_${tIdx}_${tidx}`} className={`common_td_class ${_.get(t,`class`,"")}`}  style={_.get(style,tidx,{})}>
-                                            {tIdx+1}
-                                        </div>
-                                    )
+                                                data.forEach((item, index) => {
+                                                    setValue(`table[${index}]`, e.target.checked)
+                                                })
+                                            }}
+                                        />
+                                        <label htmlFor={`check`}></label>
+                                    </div>
+                                )
+                            }
+                            // default
+                            else {
+                                let style = headerStyle(titleElm)
 
-                                case 'cellEditor' :
-                                    return (
-                                        <div key={`td_${tIdx}_${tidx}`} className={`common_td_class ${_.get(t,`class`,"")} edit_input`}  style={_.get(style,tidx,{})}>
-                                            <input type="text" onBlur={(e)=>onCellValueChanged({event : e, field : _.get(t,'field'), row : tIdx, column : tidx })}
-                                             ref={register()} name={`input[${tIdx},${tidx}]`}
-                                            />
-                                        </div>
-                                    )
-                                        
-                                default : 
-                                    return(
-                                        <div key={`td_${tIdx}_${tidx}`} className={`common_td_class ${_.get(t,`class`,"")}`} style={_.get(style,tidx,{})}>
-                                            {_.get(tdata,_.get(t,`field`),'-')}
-                                        </div>
-                                    )
+                                return (
+                                    <div key={`th_${titleElm.name}`} className={`common_th_class`} style={style} ref={el => titleRef.current[titleElmIdx] = el} data-my-id={titleElmIdx}>
+                                        {titleElm.name}
+                                    </div>
+                                )
+
                             }
                         })
-        
-                        return (
-                            <div key={`common_td_${tIdx}`} className={`common_td ${td_box_class ?? ''}`}
-                                onDoubleClick={()=>onRowDoubleClicked(_.get(data,tIdx))}
-                            >
-                                {compo}
-                            </div>
-                        )
-        
-                    })
-                }
-                
+                    }
+
+                </div>
+
             </div>
+
+            <div style={{ height: 'calc(100% - 40px)', borderBottomLeftRadius: "10px", borderBottomRightRadius: '10px', display : 'flex', width : 'fit-content', minWidth: '100%', maxWidth : "100%", overflowX  : "hidden", overflowY : "auto" }}>
+                {/* td */}
+                <div className='td_container' ref={tdRef}>
+                    {
+                        load ?
+                            <div className='no_data'>
+                                <FadeLoader color='#428BE5' />
+                            </div>
+                        :
+
+                        _.isEmpty(data) ?
+                            (
+                                <div className='no_data'>
+                                    <span>정보가 없습니다.</span>
+                                </div>
+                            )
+
+                            :
+                            tbody.map((tdata, tIdx) => {
+                                const compo = title.map((t, tidx) => {
+                                    switch (NotStringData(t)) {
+                                        case 'cellRenderer':
+                                            return (
+                                                <div key={`td_${tIdx}_${tidx}`} className={`common_td_class ${_.get(t, `class`, "")}`} style={_.get(style, tidx, {})}>
+                                                    {_.get(t, `cellRenderer`)(_.get(data, tIdx), { row: tIdx, column: tidx })}
+                                                </div>
+                                            )
+                                        case 'checkbox':
+                                            return (
+                                                <div key={`td_${tIdx}_${tidx}`} className={`common_td_class ${_.get(t, `class`, "")}`} style={_.get(style, tidx, {})}>
+                                                    <input type='checkbox' id={`tableItem${tIdx}`} name={`table[${tIdx}]`} ref={register()}
+                                                        onChange={
+                                                            (e) => {
+                                                                setValue(`table[${tIdx}]`, e.target.checked)
+                                                                setChecked((current => {
+                                                                    let newArr = [];
+
+                                                                    if (e.target.checked) {
+                                                                        newArr = [...current, data[tIdx]];
+                                                                    } else {
+                                                                        newArr = current.filter((elm) => elm._id !== data[tIdx]._id)
+                                                                    }
+                                                                    return newArr;
+                                                                }))
+                                                            }
+                                                        }
+                                                    />
+                                                    <label htmlFor={`tableItem${tIdx}`}></label>
+                                                </div>
+                                            )
+                                        case 'autoIndexing':
+                                            return (
+                                                <div key={`td_${tIdx}_${tidx}`} className={`common_td_class ${_.get(t, `class`, "")}`} style={_.get(style, tidx, {})}>
+                                                    {tIdx + 1}
+                                                </div>
+                                            )
+
+                                        case 'cellEditor':
+                                            return (
+                                                <div key={`td_${tIdx}_${tidx}`} className={`common_td_class ${_.get(t, `class`, "")} edit_input`} style={_.get(style, tidx, {})}>
+                                                    <input type="text" onBlur={(e) => onCellValueChanged({ event: e, field: _.get(t, 'field'), row: tIdx, column: tidx })}
+                                                        ref={register()} name={`input[${tIdx},${tidx}]`}
+                                                    />
+                                                </div>
+                                            )
+
+                                        default:
+                                            return (
+                                                <div key={`td_${tIdx}_${tidx}`} className={`common_td_class ${_.get(t, `class`, "")}`} style={_.get(style, tidx, {})}>
+                                                    {_.get(tdata, _.get(t, `field`), '-')}
+                                                </div>
+                                            )
+                                    }
+                                })
+
+                                return (
+                                    <div key={`common_td_${tIdx}`} className={`common_td ${td_box_class ?? ''}`}
+                                        onDoubleClick={() => onRowDoubleClicked(_.get(data, tIdx))}
+                                    >
+                                        {compo}
+                                    </div>
+                                )
+
+                            })
+                    }
+
+                </div>
             </div>
         </div>
     )

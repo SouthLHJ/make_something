@@ -2,11 +2,19 @@
 .common_table{
     display: flex;
     flex-direction: column;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    height : 500px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    
+    height: calc(50px *12 + 40px);
     overflow-x: auto;
+    overflow-y: hidden;
     width: 100%;
+    max-width: 100%;
+
+    &.is_border_r{
+        border-radius: 11px;
+        border: 1px solid #ddd;
+    }
 
     .th_container{
         min-width : 100%;
@@ -22,25 +30,29 @@
         padding : 10px;
         background-color: #fff;
         
-        border-top-right-radius: 10px;
-        border-top-left-radius: 10px;
-
         overflow: hidden;
         width: fit-content;
+        min-width: 100%;
         min-height: 35px;
+
+        &.is_border_r{
+            border-top-right-radius: 11px;
+            border-top-left-radius: 11px;
+        }
+
         .common_th_class{
             text-align: center;
             font-size:  14px;
+            font-weight: 500;
             color : #516175;
             // border-right: 1px solid #ddd;
         }
     }   
   
     .td_container{
-        overflow: auto;
-        height: 100%;
-
-        
+        // overflow-y: auto;
+        min-width: 100%;
+        width: fit-content;
     }
   
     .common_td{
@@ -49,8 +61,8 @@
         align-items: center;
   
         padding : 10px;
-        overflow: hidden;
-        width: 100%;
+        width: fit-content;
+        min-width: 100%;
         min-height: 35px;
         white-space: nowrap;
         overflow: hidden;
@@ -61,21 +73,110 @@
 
         &:hover{
             background-color: #E9EDF4;
-            .common_td_class{
-                color : #425896;
-                font-weight: bold;
             
+            .common_td_class,div,span,p{
+                color : #425896;
+                font-weight: 500;
+            }
+
+            // 기본 박스 디자인 호버( hover )
+            .btn_box {
+                &.red{
+                    opacity: 0.8;
+                }
+                &.blue{
+                    opacity: 0.8;
+                }
+                &.darkblue{
+                    opacity: 0.8;
+                }
+                &.white{
+                    opacity: 0.8;
+                }
             }
 
         }
 
+        
+        // 기본 박스 디자인
+        .btn_box{
+            min-width: 40px;
+            height: 28px;
+            border-radius:  11px;
+            text-align: center;
+            padding: 0px 8px;
+
+            &.red{
+                background-color: #FB5E8D;
+                border : 1px solid #E4356A;
+                color: #fff;
+            }
+
+            &.blue{
+                background-color: #428BE5;
+                border : 1px solid #2879DE;
+                color: #fff;
+            }
+
+            &.darkblue{
+                background-color: #194C8B;
+                border : 1px solid #2B5E9E;
+                color: #fff;
+            }
+
+            &.white {
+                background-color: #fff;
+                border : 1px solid #BCC8D8;
+                color: #516175;
+            }
+
+            &.fourwords{
+                width : calc(20*4px)
+            }
+
+            &.disable {
+                background-color: #C0C9D9 ;
+                color: #516175;
+            }
+        }
+
+
+
+        // 기본 글자 폰트
         .common_td_class{
             text-align: center;
-            font-size:  14px;
-            color : #516175;
             overflow: hidden;
         }
 
+        div,span,p{
+            font-size:  14px;
+            color : #516175;
+            user-select: none;
+        }
+
+
+        // Edit
+        .edit_input{
+            padding: 0px 7px;
+            input {
+                width: 90%;
+                height: 30px;
+                
+                border-radius: 6px;
+                
+                color: #516175;
+    
+                &:focus{
+                    outline: none !important;
+                    background-color: #fff;
+                    border: 2.5px solid #2B5E9E;
+                }
+    
+                &:hover{
+                    background-color: #F6F7FB;
+                }
+            }
+        }
 
     }
 
@@ -83,8 +184,8 @@
         background-color: #fff;
         width: 100%;
         height: 100%;
-        border-bottom-left-radius: 10px;
-        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 11px;
+        border-bottom-right-radius: 11px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -94,28 +195,36 @@
     }
 
 
+    
+
+
 
     
     &::-webkit-scrollbar, ::-webkit-scrollbar {
         height: 6px;
         width:  6px;
-        border-radius: 10px;
+        border-radius: 11px;
     }
     &::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb {
         background-color: #c8cbdb;
-        border-radius: 10px;
+        border-radius: 11px;
     }
     &::-webkit-scrollbar-track, ::-webkit-scrollbar-track {
         background-color: #f2f3f7;
-        border-radius: 10px;
+        border-radius: 11px;
     }
 
     .cellTextLeftFlex{
         display: flex;
         justify-content: flex-start;
     }
-    
-    &.height300{
-        height: 300px;
+
+    &.fiveRow{
+        height: calc(50px *5 + 40px);
     }
+
+    &.tenRow{
+        height: calc(50px *10 + 40px);
+    }
+
 }
