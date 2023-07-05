@@ -1,0 +1,20 @@
+input[type='time'] {
+    border: 1px solid #d5d8e2;
+    border-radius: 11px;
+    color: #516175;
+    font-size: 13px;
+    // width: 180px;
+    
+    height : 40px;
+}
+
+input[type='time']::-webkit-datetime-edit {
+    /* Customize the appearance of the input text */
+    /* Example: Change the text color and font size */
+    color: #555;
+    font-size: 14px;
+}
+
+::-webkit-inner-spin-button{
+    background-color: red;
+}

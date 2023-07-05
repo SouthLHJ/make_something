@@ -15,6 +15,10 @@ import Filter from '@container/Filter';
 
 import Table from '@container/Table'
 
+import TimePicker from 'react-time-picker';
+import 'react-time-picker/dist/TimePicker.css';
+import './component/CustomTime/timestyle.scss';
+
 
 function App() {
   const [count, setCount] = useState(0);
@@ -55,7 +59,18 @@ function App() {
             }}
           /> */}
 
-            <input onBlur={(e)=>{console.log(e); e.target.value = '바꿀꺼임'}}/>
+            <TimePicker
+              format={"HH:mm"}
+              hourPlaceholder={"시"}
+              minutePlaceholder={"분"}
+              disableClock={true}
+              // clearIcon={false}
+              onChange={(e)=>console.log(e)}
+              // value={learnStart}
+              
+              className="newIndexForm time_input_course"
+            
+            />
         </Profiler>
       </div>
     
