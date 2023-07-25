@@ -12,6 +12,7 @@
     "@emotion/react": "^11.10.8",
     "@emotion/styled": "^11.10.8",
     "@mui/material": "^5.12.3",
+    "@silevis/reactgrid": "^4.0.5",
     "file-saver": "^2.0.5",
     "jotai": "^2.2.0",
     "lodash": "^4.17.21",

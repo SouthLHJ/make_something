@@ -20,6 +20,9 @@ import 'react-time-picker/dist/TimePicker.css';
 import './component/CustomTime/timestyle.scss';
 
 
+import ReactGrids from '@container/ReactGrid';
+
+
 function App() {
   const [count, setCount] = useState(0);
 
@@ -59,7 +62,7 @@ function App() {
             }}
           /> */}
 
-            <TimePicker
+            {/* <TimePicker
               format={"HH:mm"}
               hourPlaceholder={"시"}
               minutePlaceholder={"분"}
@@ -70,6 +73,10 @@ function App() {
               
               className="newIndexForm time_input_course"
             
+            /> */}
+
+            <ReactGrids
+
             />
         </Profiler>
       </div>
