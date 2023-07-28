@@ -1,3 +1,10 @@
 .react_grid_container{
     
 }
+
+.sheetbtn{
+    &.selected{
+        background: #aaa;
+        color: #fff;
+    }
+}

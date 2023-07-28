@@ -1,108 +1,74 @@
+import SheetItem from '../component/ReactGrids/SheetItem'
+
+import { ReactGrid, Column, Row, CellChange, TextCell, Id, DefaultCellTypes, Highlight , CellTemplate, } from "@silevis/reactgrid";
+
+import Original from '../component/ReactGrids/Original'
+import '../style/components/reactGrid.scss'
+import { useMemo, useState, useEffect } from 'react'
+import _ from 'lodash';
+
+import * as Dummy from '../component/ReactGrids/dummy';
 
 
-import * as React from "react";
-import { ReactGrid, Column, Row, CellChange, TextCell, Id  } from "@silevis/reactgrid";
-import "@silevis/reactgrid/styles.css";
-import Plus from "@src/component/ReactGrids/Plus";
-
-interface Person {
-    name: string;
-    surname: string;
-  }
-  
-const getPeople = (): Person[] => [
-    { name: "", surname: "" },
-    { name: "", surname: "" },
-    { name: "", surname: "" }
-];
-
-const getColumns = (): Column[] => [
-    { columnId: "name", width: 150, resizable: true },
-    { columnId: "surname", width: 150, resizable: true },
-];
-
-const headerRow: Row = {
-    rowId: "header",
-    cells: [
-        { type: "header", text: "" },
-        { type: "header", text: "" }
-    ]
-};
-
-const getRows = (people: Person[]): Row[] => [
-    headerRow,
-    ...people.map<Row>((person, idx) => ({
-        rowId: idx,
-        cells: [
-            { type: "text", text: person.name },
-            { type: "text", text: person.surname }
-        ]
-    }))
-];
-
-// 텍스트 수정
-const applyChangesToPeople = (
-    changes: CellChange<TextCell>[],
-    prevPeople: Person[]
-    ): Person[] => {
-    changes.forEach((change) => {
-        const personIndex = change.rowId;
-        const fieldName = change.columnId;
-        prevPeople[personIndex][fieldName] = change.newCell.text;
-    });
-    return [...prevPeople];
-};
-
-
-
-
-
-
+interface Data {
+    
+}
 
 const ReactGrids = ()=>{
 
-    const [people, setPeople] = React.useState<Person[]>(getPeople());
-    const [columns, setColumns] = React.useState<Column[]>(getColumns());
+    const [dataList, setDataList] = useState<any[]>([]);
+    const [seletedSheet, setSelectedSheet] = useState(0);
+    const sheetList = useMemo(() => {
+        const arr = dataList.map((data,idx)=>{
+            return `sheet${idx+1}`
+        })
+        if(_.isEmpty(arr)){
+            arr.push('sheet1')
+        }
 
-    const rows = getRows(people);
+        return arr
+    }, [dataList])
 
-    // 텍스트 내용 변경
-    const handleChanges = (changes: CellChange<TextCell>[]) => {
-        setPeople((prevPeople) => applyChangesToPeople(changes, prevPeople));
-    };
+    useEffect(()=>{
+        getDataList();
 
-    // 컬럼 조절
-    const handleColumnResize = (ci: Id, width: number) => {
-        setColumns((prevColumns) => {
-          const columnIndex = prevColumns.findIndex(el => el.columnId === ci);
-          const resizedColumn = prevColumns[columnIndex];
-          const updatedColumn = { ...resizedColumn, width };
-          prevColumns[columnIndex] = updatedColumn;
-          return [...prevColumns];
-        });
+    },[])
+
+    const getDataList = async()=>{
+        const {dummy1 } = Dummy;
+        setDataList([dummy1])    
     }
 
     
 
+
+
     return (
-        <div className="react_grid_container" style={{display : 'flex', flexDirection:'column', justifyContent : 'center', alignItems : 'center'}}>
-            <div style={{display : 'flex', justifyContent : 'center', alignItems : 'center'}}>
-                <ReactGrid
-                 rows={rows}
-                 columns={columns}
-                 onCellsChanged={handleChanges} 
-                 onColumnResized={handleColumnResize}
-                //  stickyLeftColumns={1}
-                 stickyRightColumns={1}
-                //  stickyTopRows={1}
-                 stickyBottomRows={1}
-                 enableFillHandle
-                 enableRangeSelection
-                />
-                <Plus />
-            </div>
-            <Plus/>
+       <div style={{display:'flex', flexDirection : 'column', marginTop : 10}}>
+        <div style={{display:'flex',}}>
+            {/* <button onClick={()=>{console.log(people,'데이터')}}>저장</button> */}
         </div>
+
+        {
+            _.isEmpty(dataList) ?
+            <SheetItem />
+            :
+            <SheetItem data={dataList[seletedSheet]}/>
+        }
+ 
+        <div style={{width:'100%', display:'flex', justifyContent:'flex-start'}}>
+            {
+                sheetList.map((sheet,idx) => (
+                    // <div onClick={(e)=>{e.preventDefault();console.log(sheet)}} onDoubleClick={(e)=>e.preventDefault()}>
+                        // <input value={sheet} disabled/>
+                        <button key={sheet} className={`${seletedSheet === idx && 'selected sheetbtn'}`} onClick={()=>setSelectedSheet(idx)}>{sheet}</button>
+                    // </div>
+                ))
+            }
+
+
+        </div>
+       </div>
     )
 }
 
