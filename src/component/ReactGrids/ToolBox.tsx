@@ -24,6 +24,7 @@ const ToolBox = forwardRef(({handleUndoChanges, handleRedoChanges, setPeople, se
     const fontSizeRef = useRef<HTMLSelectElement>(null)
     const colorRef = useRef<HTMLInputElement>(null);
     const backgroundRef = useRef<HTMLInputElement>(null);
+    const formulaRef = useRef<HTMLInputElement>(null);
 
 
     const fontList = useMemo(()=>{
@@ -38,82 +39,24 @@ const ToolBox = forwardRef(({handleUndoChanges, handleRedoChanges, setPeople, se
         handleGetSelectedData();
     },[selectedCell])
 
-    const handleChangeStyle = (type: string, value: any) => {
-        const range: [] = _.get(ref, 'current.state.selectedRanges', []);
-        const cell = _.get(range,'0');
-        const columns = _.get(cell,'columns',[]);
-        const rows = _.get(cell,'rows',[]);
-        columns.forEach((col,coIdx)=>{
 
-            rows.forEach((row,roIdx)=>{
-                let colId = _.get(col, 'columnId');
-                let rowId = _.get(row, 'rowId');
-                if(colId!=0){
-                    setPeople(people => {
-                        const clone = [...people]
-                        const oStyle = _.get(clone, `${rowId}.props.styles.col${colId}`)
-                        let newStyle  = {};
-                        switch (type) {
-                            case 'font-size':
-                                newStyle = { ...oStyle, fontSize: `${value}` }
-                                _.set(clone, `${rowId}.props.styles.col${colId}`, newStyle)
-                                return clone
-                            case 'font-bold':
-                                const values =  _.get(oStyle, 'fontWeight') == 'bold' ? '' : 'bold'
-                                newStyle = { ...oStyle, fontWeight: values }
-                                _.set(clone, `${rowId}.props.styles.col${colId}`, newStyle)
-                                return clone
-            
-                            case 'color' : 
-                                newStyle = { ...oStyle, color : value }
-                                _.set(clone, `${rowId}.props.styles.col${colId}`, newStyle)
-                                return clone
-            
-                            case 'background' : 
-                                newStyle = { ...oStyle, background : value }
-                                _.set(clone, `${rowId}.props.styles.col${colId}`, newStyle)
-                                return clone
-            
-                            case 'justify-content' :
-                                newStyle = { ...oStyle, justifyContent : value }
-                                _.set(clone, `${rowId}.props.styles.col${colId}`, newStyle)
-                                return clone
-            
-                            case 'border' :
-                                if(value){
-                                    newStyle = { ...oStyle, borderLeftStyle : 'solid', borderTopStyle : 'solid', borderLeftWidth : '1px', borderTopWidth : '1px', borderColor : '#000000' }
-                                }else{
-                                    newStyle = { ...oStyle, borderLeftStyle : 'unset', borderTopStyle : 'unset', borderLeftWidth : 'unset', borderTopWidth : 'unset', borderColor : null, }
-                                }
-                                _.set(clone, `${rowId}.props.styles.col${colId}`, newStyle)
-                                return clone
-            
-                            default:
-                                return clone
-                        }
-                    })
-                }
 
-            })
-        })
-
-    }
-
+    // 데이터 불러오기
     const handleGetSelectedData = ()=>{
         const selected = _.get(ref,'current.state.focusedLocation');
         const colIdx = _.get(selected,'column.idx');
         const rowIdx = _.get(selected,'row.rowId');
-
+        
         const selectedCell = _.get(selected,`row.cells.${colIdx}`);
         const selectedStyle = _.get(selectedCell,'style');
-        // console.log(selected)
+        const selectedFormula = _.get(selectedCell ,'formula', '');
         if(selectedStyle){
             handleSetSelectedStyle(selectedStyle);
         }
+        handleSetSeletedFormul(selectedFormula);
 
         return selected
     }
-
     const handleSetSelectedStyle = (style : Style & CellStyle)=>{
         if(style){
             const {background = '#fff', color = '#000', fontSize = '16px', fontWeight, justifyContent} = style
@@ -123,6 +66,14 @@ const ToolBox = forwardRef(({handleUndoChanges, handleRedoChanges, setPeople, se
             colorRef.current!.value = color;
     
             backgroundRef.current!.value = background;
+        }
+    }
+    const handleSetSeletedFormul = (formula : string)=>{
+        if(_.isEmpty(formula)){
+            formulaRef.current!.value   = '';     
+
+        }else{
+            formulaRef.current!.value   = formula;            
         }
     }
 
@@ -200,38 +151,122 @@ const ToolBox = forwardRef(({handleUndoChanges, handleRedoChanges, setPeople, se
 
     }
 
-    return (
-        <div style={{display:"flex"}}>
-            <button onClick={handleUndoChanges}>↩</button>
-            <button onClick={handleRedoChanges}>↪</button>
+    const handleChangeStyle = (type: string, value: any) => {
+        const range: [] = _.get(ref, 'current.state.selectedRanges', []);
+        const cell = _.get(range,'0');
+        const columns = _.get(cell,'columns',[]);
+        const rows = _.get(cell,'rows',[]);
+        columns.forEach((col,coIdx)=>{
 
-            <select ref={fontSizeRef} onChange={()=>handleChangeStyle('font-size',fontSizeRef.current?.value)} defaultValue={'16px'}>
-                {
-                    fontList.map(elm=>(
-                        <option key={elm} value={`${elm}px`}>{elm}</option>
-                    ))
-                }
-            </select>
-
-            <button onClick={()=>handleChangeStyle('font-bold', 'bold')} style={{fontWeight:'bold'}}>B</button>
-
-            <input ref={colorRef} onChange={()=>handleChangeStyle('color', colorRef.current?.value)} defaultValue={'#000'}/>
+            rows.forEach((row,roIdx)=>{
+                let colId = _.get(col, 'columnId');
+                let rowId = _.get(row, 'rowId');
+                if(colId!=0){
+                    setPeople(people => {
+                        const clone = [...people]
+                        const oStyle = _.get(clone, `${rowId}.props.styles.col${colId}`)
+                        let newStyle  = {};
+                        switch (type) {
+                            case 'font-size':
+                                newStyle = { ...oStyle, fontSize: `${value}` }
+                                _.set(clone, `${rowId}.props.styles.col${colId}`, newStyle)
+                                return clone
+                            case 'font-bold':
+                                const values =  _.get(oStyle, 'fontWeight') == 'bold' ? '' : 'bold'
+                                newStyle = { ...oStyle, fontWeight: values }
+                                _.set(clone, `${rowId}.props.styles.col${colId}`, newStyle)
+                                return clone
             
-            <input ref={backgroundRef} onChange={()=>handleChangeStyle('background', backgroundRef.current?.value)} defaultValue={'#fff'}/>
+                            case 'color' : 
+                                newStyle = { ...oStyle, color : value }
+                                _.set(clone, `${rowId}.props.styles.col${colId}`, newStyle)
+                                return clone
+            
+                            case 'background' : 
+                                newStyle = { ...oStyle, background : value }
+                                _.set(clone, `${rowId}.props.styles.col${colId}`, newStyle)
+                                return clone
+            
+                            case 'justify-content' :
+                                newStyle = { ...oStyle, justifyContent : value }
+                                _.set(clone, `${rowId}.props.styles.col${colId}`, newStyle)
+                                return clone
+            
+                            case 'border' :
+                                if(value){
+                                    newStyle = { ...oStyle, borderLeftStyle : 'solid', borderTopStyle : 'solid', borderLeftWidth : '1px', borderTopWidth : '1px', borderColor : '#000000' }
+                                }else{
+                                    newStyle = { ...oStyle, borderLeftStyle : 'unset', borderTopStyle : 'unset', borderLeftWidth : 'unset', borderTopWidth : 'unset', borderColor : null, }
+                                }
+                                _.set(clone, `${rowId}.props.styles.col${colId}`, newStyle)
+                                return clone
+            
+                            default:
+                                return clone
+                        }
+                    })
+                }
 
+            })
+        })
+
+    }
+    const handleChangeFormula : React.KeyboardEventHandler<HTMLInputElement> = (e)=>{
+        const selected = _.get(ref,'current.state.focusedLocation');
+        const colIdx = _.get(selected,'column.idx');
+        const rowIdx = _.get(selected,'row.rowId');
+
+        if(e.code === 'Enter'){
+            setPeople(people => {
+                const clone = [...people]
+                // const oFormula = _.get(clone, `${rowIdx}.props.formula.col${colIdx}`)
+                console.log(_.get(e,'target.value'),'e.target.value');
+                _.set(clone, `${rowIdx}.props.formula.col${colIdx}`, _.get(e,'target.value'))
+                console.log(clone,'clone??')
+                return clone
+            })
+
+        }
+    }
+
+    return (
+        <div style={{display:"flex", flexDirection : "column", width : '100%', justifyContent : 'center', alignItems : 'flex-start'}}>
             <div>
-                <button onClick={()=>handleChangeStyle('justify-content', 'flex-start')}>왼</button>
-                <button onClick={()=>handleChangeStyle('justify-content', 'center')}>중</button>
-                <button onClick={()=>handleChangeStyle('justify-content', 'flex-end')}>오</button>
+                <button onClick={handleUndoChanges}>↩</button>
+                <button onClick={handleRedoChanges}>↪</button>
+
+                <select ref={fontSizeRef} onChange={()=>handleChangeStyle('font-size',fontSizeRef.current?.value)} defaultValue={'16px'}>
+                    {
+                        fontList.map(elm=>(
+                            <option key={elm} value={`${elm}px`}>{elm}</option>
+                        ))
+                    }
+                </select>
+
+                <button onClick={()=>handleChangeStyle('font-bold', 'bold')} style={{fontWeight:'bold'}}>B</button>
+
+                <input ref={colorRef} onChange={()=>handleChangeStyle('color', colorRef.current?.value)} defaultValue={'#000'}/>
+                
+                <input ref={backgroundRef} onChange={()=>handleChangeStyle('background', backgroundRef.current?.value)} defaultValue={'#fff'}/>
+
+                <div style={{display : "flex"}}>
+                    <button onClick={()=>handleChangeStyle('justify-content', 'flex-start')}>왼</button>
+                    <button onClick={()=>handleChangeStyle('justify-content', 'center')}>중</button>
+                    <button onClick={()=>handleChangeStyle('justify-content', 'flex-end')}>오</button>
+                </div>
+
+                {/* <div>
+                    <button onClick={()=>handleChangeStyle('border', true)}>테있</button>
+                    <button onClick={()=>handleChangeStyle('border', false)}>테없</button>
+                </div> */}
+
+                <button onClick={(e)=>handleMergeCells()}>셀 병합</button>
+
             </div>
 
-            {/* <div>
-                <button onClick={()=>handleChangeStyle('border', true)}>테있</button>
-                <button onClick={()=>handleChangeStyle('border', false)}>테없</button>
-            </div> */}
-
-            <button onClick={(e)=>handleMergeCells()}>셀 병합</button>
-
+            <div style={{width : '100%'}}>
+                <input style={{width: "100%"}} ref={formulaRef} onKeyDown={(e)=>handleChangeFormula(e)} defaultValue={''} placeholder="수식을 입력한 뒤, 엔터를 눌러 계산을 하세요. ex)=sheet1!a1+sheet2!a2" />
+            </div>
         </div>
     )
 })
