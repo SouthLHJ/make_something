@@ -1,20 +1,22 @@
 
-import {useCountStore} from "@lib/Zustand/context";
+import XcellZustand, {useInitStore} from "@lib/Zustand/context";
 
 
 const Zustand = ()=>{
 
-    const {counts, increaseCount} = useCountStore(state=>state);
+    const {isMobile, user} = useInitStore(state=>state);
 
     
 
     return(
         <div>
+            <XcellZustand/>
             <h1>Zustand</h1>
 
-            <p>{counts}</p>
+            <p>{isMobile}</p>
+            <p>{user?.email}</p>
 
-            <button onClick={()=>increaseCount()}>버튼</button>
+            <button onClick={()=>{}}>버튼</button>
         </div>
     )
 }

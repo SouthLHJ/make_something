@@ -1,6 +1,6 @@
 
 
-import { Profiler, useState } from 'react'
+import { Profiler, useRef, useState } from 'react'
 import { Route } from "react-router-dom";
 
 import reactLogo from './assets/react.svg'
@@ -27,6 +27,13 @@ import ReactGrids from '@container/ReactGrid';
 
 function App() {
   const [count, setCount] = useState(0);
+
+  const testRef = useRef('');
+  testRef.current = 'TEST STRING'
+  const {current : testString} = testRef;
+
+  console.log(testString,'???')
+
 
   return (
     <div style={{display :"flex",flex : 1}}>
@@ -77,9 +84,11 @@ function App() {
             
             /> */}
 
-            <ReactGrids
+            {/* <ReactGrids
 
-            />
+            /> */}
+
+            {/* <Zustand/> */}
         </Profiler>
       </div>
     
