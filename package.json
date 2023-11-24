@@ -9,14 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.8",
-    "@emotion/styled": "^11.10.8",
-    "@mui/material": "^5.12.3",
-    "@silevis/reactgrid": "^4.0.5",
-    "file-saver": "^2.0.5",
-    "jotai": "^2.2.0",
+    "axios": "^1.6.2",
     "lodash": "^4.17.21",
-    "node-sass": "^8.0.0",
+    "pptx-compose": "^1.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
@@ -24,9 +19,7 @@
     "react-router-dom": "^6.11.0",
     "react-spinners": "^0.13.8",
     "react-time-picker": "^6.2.0",
-    "reactjs-popup": "^2.0.5",
-    "xlsx": "^0.18.5",
-    "zustand": "^4.4.1"
+    "reactjs-popup": "^2.0.5"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",

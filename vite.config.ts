@@ -10,7 +10,7 @@ export default defineConfig({
       { find: '@src', replacement: resolve(__dirname, 'src') },
       {
         find: '@components',
-        replacement: resolve(__dirname, 'src/components'),
+        replacement: resolve(__dirname, 'src/component'),
       },
       {
         find: '@container',
@@ -19,6 +19,10 @@ export default defineConfig({
       {
         find: '@lib',
         replacement: resolve(__dirname, 'src/lib'),
+      },
+      {
+        find: '@path',
+        replacement: resolve(__dirname, 'src/path'),
       },
     ],
   },
